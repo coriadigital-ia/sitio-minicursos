@@ -24,3 +24,36 @@ header { padding: 1.2rem 0; border-bottom: 1px solid var(--glass-border); backgr
 .menu-item.active svg { transform: translateY(-3px); }
 
 @media (max-width: 768px) { .mobile-menu { display: flex; } .filter-pill { display: none; } header .user-menu { display: none; } }
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.modal-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    padding: 2.5rem;
+    border-radius: 2rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+.modal-card .form-group label {
+    pointer-events: none;
+}
+
+select option {
+    background-color: #1e293b;
+    color: white;
+}
