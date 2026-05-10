@@ -1,3 +1,4 @@
+import './auth/antiInspect.js';
 import { checkSessionAndRedirect } from './auth/authGuard.js';
 import { supabase } from './lib/supabaseClient.js';
 import { initWebGLBackground } from './components/bg.js';
@@ -15,6 +16,13 @@ const categoryIcons = {
     'Soft Skills': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>', 
     'Negocios': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' 
 };
+
+// Función de escape para prevenir XSS
+function escapeHTML(str) {
+    const p = document.createElement('p');
+    p.textContent = str;
+    return p.innerHTML;
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Verificar Sesión. Si no hay, te manda al login
@@ -42,13 +50,50 @@ document.addEventListener('DOMContentLoaded', async () => {
         await supabase.auth.signOut();
         window.location.href = '/login.html';
     };
+
+    // Lógica para botón Nuevo
+    document.getElementById('add-btn').onclick = () => {
+        const title = prompt("Título del nuevo curso:");
+        const category = prompt("Categoría (Diseño, Desarrollo, Soft Skills, Negocios):");
+        const duration = prompt("Duración (minutos):");
+        const pdf_url = prompt("URL del PDF:");
+
+        if (title && category && duration && pdf_url) {
+            saveCourse({ title, category, duration: parseInt(duration), pdf_url });
+        }
+    };
 });
 
+// Funciones globales para que los botones 'onclick' de las tarjetas funcionen
 window.setCat = (c) => { 
     activeCat = c; 
     renderFilters(); 
     renderCards(); 
 };
+
+window.editCourse = async (id) => {
+    const { data: course } = await supabase.from('courses').select('*').eq('id', id).single();
+    const newTitle = prompt("Nuevo título:", course.title);
+    if (newTitle) {
+        const { error } = await supabase.from('courses').update({ title: newTitle }).eq('id', id);
+        if (error) alert("Error: " + error.message);
+        else fetchCourses();
+    }
+};
+
+window.deleteCourse = async (id) => {
+    if (confirm("¿Estás seguro de eliminar este curso?")) {
+        const { error } = await supabase.from('courses').delete().eq('id', id);
+        if (error) alert("Error: " + error.message);
+        else fetchCourses();
+    }
+};
+
+async function saveCourse(course) {
+    const { error } = await supabase.from('courses').insert([course]);
+    if (error) alert("Error al guardar: " + error.message);
+    else fetchCourses();
+}
 
 async function fetchCourses() { 
     const { data } = await supabase.from('courses').select('*').order('created_at', { ascending: false }); 
@@ -68,8 +113,8 @@ function renderCards() {
     document.getElementById('cardGrid').innerHTML = filtered.map(c => `
         <div class="course-card">
             ${userRole === 'Administrador' ? `<div class="admin-actions"><button class="btn-icon" onclick="editCourse('${c.id}')">✏️</button><button class="btn-icon" onclick="deleteCourse('${c.id}')">🗑️</button></div>` : ''}
-            <h3 style="margin-bottom: 0.5rem; padding-right: 3.5rem; line-height: 1.3;">${c.title}</h3>
-            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem;">${c.category} | ${c.duration} min</p>
+            <h3 style="margin-bottom: 0.5rem; padding-right: 3.5rem; line-height: 1.3;">${escapeHTML(c.title)}</h3>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1.5rem;">${escapeHTML(c.category)} | ${c.duration} min</p>
             <button class="btn-signin" style="width: auto; padding: 0.6rem 1.5rem; font-size: 0.85rem; display: inline-flex; border-radius: 0.5rem;" onclick="window.open('${c.pdf_url}', '_blank')">Ver PDF</button>
         </div>
     `).join('');
