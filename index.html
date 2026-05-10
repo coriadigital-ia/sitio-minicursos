@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Dashboard | Plataforma de Micro-Learning Premium">
-    <title>Mini | Cursos</title>
+    <title>Dashboard | Micro-Learning</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +36,41 @@
         </main>
 
         <nav id="mobileMenu" class="mobile-menu"></nav>
+
+        <!-- Modal Formulario Nuevo Curso (Diseño Premium) -->
+        <div id="courseModal" class="modal-overlay hidden">
+            <div class="modal-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h3 style="font-family: 'Outfit'; font-size: 1.5rem;">Gestión de Curso</h3>
+                    <button id="closeModal" class="btn-icon">✕</button>
+                </div>
+                <form id="courseForm">
+                    <input type="hidden" id="courseId">
+                    <div class="form-group">
+                        <input type="text" id="courseTitle" placeholder=" " required>
+                        <label>Título del Curso</label>
+                    </div>
+                    <div class="form-group">
+                        <select id="courseCategory" required style="width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--glass-border); color: white; padding: 0.6rem 0; outline: none;">
+                            <option value="" disabled selected style="background: var(--bg-dark);">Seleccionar Categoría</option>
+                            <option value="Diseño" style="background: var(--bg-dark);">Diseño</option>
+                            <option value="Desarrollo" style="background: var(--bg-dark);">Desarrollo</option>
+                            <option value="Soft Skills" style="background: var(--bg-dark);">Soft Skills</option>
+                            <option value="Negocios" style="background: var(--bg-dark);">Negocios</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <input type="number" id="courseDuration" placeholder=" " required>
+                        <label>Duración (minutos)</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="url" id="coursePdf" placeholder=" " required>
+                        <label>URL del PDF (Google Drive/Dropbox/etc)</label>
+                    </div>
+                    <button type="submit" class="btn-signin" style="margin-top: 1rem;">Guardar Curso</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="/src/main.js"></script>
