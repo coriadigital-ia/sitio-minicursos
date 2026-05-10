@@ -1,0 +1,18 @@
+/* Auth Card */
+#auth-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 1.5rem; }
+.auth-card { 
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(20px); 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    padding: 2.5rem; border-radius: 2rem; 
+    width: 100%; max-width: 400px; 
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.form-group { position: relative; margin-bottom: 2rem; text-align: left; }
+.form-group input { width: 100%; padding: 0.6rem 0; background: transparent; border: none; border-bottom: 2px solid var(--glass-border); color: white; outline: none; transition: var(--transition); }
+.form-group label { position: absolute; top: 0.6rem; left: 0; color: var(--text-muted); pointer-events: none; transition: var(--transition); display: flex; align-items: center; gap: 0.5rem; }
+.form-group input:focus ~ label, .form-group input:not(:placeholder-shown) ~ label { top: -1.4rem; font-size: 0.8rem; color: var(--primary); }
+
+.google-btn { width: 100%; padding: 0.7rem; border-radius: 0.75rem; border: none; background: white; color: #1e293b; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
