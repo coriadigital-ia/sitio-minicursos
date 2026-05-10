@@ -39,21 +39,65 @@ header { padding: 1.2rem 0; border-bottom: 1px solid var(--glass-border); backgr
 }
 
 .modal-card {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(25px);
-    border: 1px solid var(--glass-border);
+    background: white;
     padding: 2.5rem;
-    border-radius: 2rem;
+    border-radius: 2.5rem;
     width: 100%;
-    max-width: 500px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    max-width: 480px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+    color: #1e293b;
 }
 
-.modal-card .form-group label {
-    pointer-events: none;
+.form-group-new {
+    margin-bottom: 1.2rem;
+    text-align: left;
 }
 
-select option {
-    background-color: #1e293b;
+.form-group-new label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    color: #1e293b;
+}
+
+.form-group-new input, .form-group-new select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 0.8rem;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group-new input:focus, .form-group-new select:focus {
+    border-color: #3b82f6;
+}
+
+.btn-save {
+    background: #3b82f6;
     color: white;
+    border: none;
+    padding: 0.9rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
 }
+
+.btn-save:hover { background: #2563eb; }
+
+.btn-cancel {
+    background: white;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    padding: 0.9rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-cancel:hover { background: #f1f5f9; }
