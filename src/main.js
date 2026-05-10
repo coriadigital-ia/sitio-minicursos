@@ -68,8 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     courseForm.onsubmit = async (e) => {
         e.preventDefault();
         const id = document.getElementById('courseId').value;
+        const title = document.getElementById('courseTitle').value;
         const courseData = {
-            title: document.getElementById('courseTitle').value,
+            title: title,
+            slug: title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, ''),
             category: document.getElementById('courseCategory').value,
             duration: parseInt(document.getElementById('courseDuration').value),
             pdf_url: document.getElementById('coursePdf').value
