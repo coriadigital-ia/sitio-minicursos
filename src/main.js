@@ -51,20 +51,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '/login.html';
     };
 
-    // Lógica para botón Nuevo
-    document.getElementById('add-btn').onclick = () => {
-        const title = prompt("Título del nuevo curso:");
-        const category = prompt("Categoría (Diseño, Desarrollo, Soft Skills, Negocios):");
-        const duration = prompt("Duración (minutos):");
-        const pdf_url = prompt("URL del PDF:");
+    // Lógica para el Modal
+    const modal = document.getElementById('courseModal');
+    const courseForm = document.getElementById('courseForm');
+    const addBtn = document.getElementById('add-btn');
+    const closeModal = document.getElementById('closeModal');
 
-        if (title && category && duration && pdf_url) {
-            saveCourse({ title, category, duration: parseInt(duration), pdf_url });
+    addBtn.onclick = () => {
+        courseForm.reset();
+        document.getElementById('courseId').value = '';
+        modal.classList.remove('hidden');
+    };
+
+    closeModal.onclick = () => modal.classList.add('hidden');
+
+    courseForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('courseId').value;
+        const courseData = {
+            title: document.getElementById('courseTitle').value,
+            category: document.getElementById('courseCategory').value,
+            duration: parseInt(document.getElementById('courseDuration').value),
+            pdf_url: document.getElementById('coursePdf').value
+        };
+
+        if (id) {
+            const { error } = await supabase.from('courses').update(courseData).eq('id', id);
+            if (error) alert("Error al actualizar: " + error.message);
+        } else {
+            const { error } = await supabase.from('courses').insert([courseData]);
+            if (error) alert("Error al guardar: " + error.message);
         }
+
+        modal.classList.add('hidden');
+        fetchCourses();
     };
 });
 
-// Funciones globales para que los botones 'onclick' de las tarjetas funcionen
+// Funciones globales
 window.setCat = (c) => { 
     activeCat = c; 
     renderFilters(); 
@@ -72,13 +96,16 @@ window.setCat = (c) => {
 };
 
 window.editCourse = async (id) => {
-    const { data: course } = await supabase.from('courses').select('*').eq('id', id).single();
-    const newTitle = prompt("Nuevo título:", course.title);
-    if (newTitle) {
-        const { error } = await supabase.from('courses').update({ title: newTitle }).eq('id', id);
-        if (error) alert("Error: " + error.message);
-        else fetchCourses();
-    }
+    const { data: course, error } = await supabase.from('courses').select('*').eq('id', id).single();
+    if (error) return alert("Error al obtener curso: " + error.message);
+    
+    document.getElementById('courseId').value = course.id;
+    document.getElementById('courseTitle').value = course.title;
+    document.getElementById('courseCategory').value = course.category;
+    document.getElementById('courseDuration').value = course.duration;
+    document.getElementById('coursePdf').value = course.pdf_url;
+    
+    document.getElementById('courseModal').classList.remove('hidden');
 };
 
 window.deleteCourse = async (id) => {
@@ -88,12 +115,6 @@ window.deleteCourse = async (id) => {
         else fetchCourses();
     }
 };
-
-async function saveCourse(course) {
-    const { error } = await supabase.from('courses').insert([course]);
-    if (error) alert("Error al guardar: " + error.message);
-    else fetchCourses();
-}
 
 async function fetchCourses() { 
     const { data } = await supabase.from('courses').select('*').order('created_at', { ascending: false }); 
